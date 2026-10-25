@@ -1,0 +1,23 @@
+spec: examples/order-chain.ears.md
+scenario: test/fixtures/explain-chain-two.json
+violations: 2
+
+R1 line 7
+When an order is submitted, the Order System shall accept the order.
+conditions:
+  order_submitted: true
+shall:
+  order_accepted: false
+because: trigger held because order_submitted=true; SHALL failed because order_accepted stayed false
+flip:
+  order_submitted: true -> false
+
+R3 line 9
+When an order is submitted, the Order System shall not ship the order.
+conditions:
+  order_submitted: true
+shall:
+  order_shipped: true
+because: trigger held because order_submitted=true; SHALL failed because order_shipped stayed true
+flip:
+  order_submitted: true -> false

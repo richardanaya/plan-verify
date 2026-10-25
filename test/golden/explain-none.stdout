@@ -1,0 +1,12 @@
+spec: examples/order-chain.ears.md
+scenario: test/fixtures/explain-chain-stuck.json
+violations: 1
+
+R2 line 8
+When the order is accepted, the Order System shall ship the order.
+conditions:
+  order_accepted: true
+shall:
+  order_shipped: false
+because: trigger held because order_accepted=true; SHALL failed because order_shipped stayed false
+flip: none

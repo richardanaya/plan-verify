@@ -1,6 +1,6 @@
 # Reference
 
-How to build plan-verify, the EARS grammar, the solver, and the commands other than the lint catalogue. Each finding is in [lint.md](lint.md). Proposed edits are in [repair.md](repair.md). The `--json` objects are in [json.md](json.md).
+How to build plan-verify, the EARS grammar, the solver, and the commands other than the lint catalogue. Each finding is in [lint.md](lint.md). A failing scenario is explained in [explain.md](explain.md). Proposed edits are in [repair.md](repair.md). The `--json` objects are in [json.md](json.md).
 
 ## Build
 
@@ -97,7 +97,8 @@ examples/order.ears.md
 
 | Command | Question it answers | Status |
 | --- | --- | --- |
-| `check [--json] <spec> --input <scenario>` | Does this scenario fit the requirements? | Implemented |
+| `check [--json] <spec> --input <scenario> [--explain]` | Does this scenario fit the requirements? | Implemented |
+| `explain [--json] <spec> --input <scenario> [--out <dir>]` | Why did this scenario fail, and which input, state, or event change would make it pass? | Implemented |
 | `diff [--json] <old-spec> <new-spec> [--out <dir>]` | How does a revised spec change what is accepted? | Implemented |
 | `lint [--json] <spec>` | Do any requirements clash, leave a hole, never trigger, leave schema unused, repeat each other, or use a word a test cannot pin down? | Implemented |
 | `repair [--json] <spec> [--apply] [--out <path>]` | What is the smallest edit for each conflict, vacuous requirement, and completeness gap? | Implemented |
@@ -113,9 +114,10 @@ help
 -->
 ```text
 usage:
-  plan-verify check [--json] <spec> --input <scenario>
+  plan-verify check [--json] <spec> --input <scenario> [--explain] [--out <dir>]
   plan-verify diff [--json] <old-spec> <new-spec> [--out <dir>]
   plan-verify emit-smt [--json] <spec>
+  plan-verify explain [--json] <spec> --input <scenario> [--out <dir>]
   plan-verify lint [--json] <spec>
   plan-verify repair [--json] <spec> [--apply] [--out <path>]
   plan-verify report <spec>
@@ -264,6 +266,10 @@ spec: examples/order-status.ears.md
 property: examples/status-placed.ears.md
 No scenario satisfies every requirement, so none violates the property.
 ```
+
+## Explain
+
+`explain` reads one scenario and says why each violated requirement failed. It lists every atomic condition in the trigger, the response values the scenario assigned, and one line that names the values. It also searches for the smallest change to declared inputs, states, and events that makes every requirement hold. Output values stay as the scenario gave them. When no such change exists, the report says `flip: none`. `--out <dir>` writes each flip as `<id>.json` for `check --input`. `check --explain` prints that same account after the usual violations. Samples are in [explain.md](explain.md).
 
 ## Repair
 

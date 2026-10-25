@@ -1,0 +1,14 @@
+spec: examples/order.ears.md
+scenario: examples/order-fail.json
+violations: 1
+
+R1 line 7
+WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.
+conditions:
+  order_submitted: true
+  inventory_available: true
+shall:
+  order_fulfilled: false
+because: trigger held because order_submitted=true and inventory_available=true; SHALL failed because order_fulfilled stayed false
+flip:
+  order_submitted: true -> false

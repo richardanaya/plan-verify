@@ -17,9 +17,10 @@ help
 -->
 ```text
 usage:
-  plan-verify check [--json] <spec> --input <scenario>
+  plan-verify check [--json] <spec> --input <scenario> [--explain] [--out <dir>]
   plan-verify diff [--json] <old-spec> <new-spec> [--out <dir>]
   plan-verify emit-smt [--json] <spec>
+  plan-verify explain [--json] <spec> --input <scenario> [--out <dir>]
   plan-verify lint [--json] <spec>
   plan-verify repair [--json] <spec> [--apply] [--out <path>]
   plan-verify report <spec>
@@ -199,6 +200,146 @@ R2 rejected, trigger true
   "order_fulfilled": false
 }
 An order was submitted, but the order was not fulfilled.
+```
+
+## Check fails, then explain
+
+When a scenario fails `check`, run `explain` before changing the spec. `examples/order-fail.json` submits an order with inventory on hand and leaves the order unfulfilled.
+
+<!-- verify stdout 1
+build/plan-verify
+check
+examples/order.ears.md
+--input
+examples/order-fail.json
+-->
+```text
+spec: examples/order.ears.md
+scenario: examples/order-fail.json
+violations: 1
+
+R1 line 7
+WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.
+An order was submitted and inventory was available, but the order was not fulfilled.
+```
+
+`explain` names the conditions that held, the response that failed, and the smallest change to an input, a state, or an event that makes every requirement hold.
+
+<!-- verify stdout 1
+build/plan-verify
+explain
+examples/order.ears.md
+--input
+examples/order-fail.json
+-->
+```text
+spec: examples/order.ears.md
+scenario: examples/order-fail.json
+violations: 1
+
+R1 line 7
+WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.
+conditions:
+  order_submitted: true
+  inventory_available: true
+shall:
+  order_fulfilled: false
+because: trigger held because order_submitted=true and inventory_available=true; SHALL failed because order_fulfilled stayed false
+flip:
+  order_submitted: true -> false
+```
+
+`--out` writes that flip. `check` accepts the written scenario.
+
+<!-- verify stdout 1
+build/plan-verify
+explain
+examples/order.ears.md
+--input
+examples/order-fail.json
+--out
+build/skill-explain
+-->
+```text
+spec: examples/order.ears.md
+scenario: examples/order-fail.json
+violations: 1
+
+R1 line 7
+WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.
+conditions:
+  order_submitted: true
+  inventory_available: true
+shall:
+  order_fulfilled: false
+because: trigger held because order_submitted=true and inventory_available=true; SHALL failed because order_fulfilled stayed false
+flip:
+  order_submitted: true -> false
+wrote: build/skill-explain/R1.json
+```
+
+<!-- verify stdout 0
+build/plan-verify
+check
+examples/order.ears.md
+--input
+build/skill-explain/R1.json
+-->
+```text
+spec: examples/order.ears.md
+scenario: build/skill-explain/R1.json
+violations: 0
+```
+
+When no input, state, or event change can satisfy the requirements, the scenario is already pinned by the spec. `examples/order-status.ears.md` demands two statuses at once. Show that to the product manager, then `repair` proposes a spec edit.
+
+<!-- verify stdout 1
+build/plan-verify
+explain
+examples/order-status.ears.md
+--input
+test/fixtures/explain-status.json
+-->
+```text
+spec: examples/order-status.ears.md
+scenario: test/fixtures/explain-status.json
+violations: 2
+
+R6 line 6
+The Order System shall mark the order shipped.
+conditions:
+  none
+shall:
+  status: placed
+because: SHALL failed because status stayed placed
+flip: none
+
+R7 line 7
+The Order System shall mark the order cancelled.
+conditions:
+  none
+shall:
+  status: placed
+because: SHALL failed because status stayed placed
+flip: none
+```
+
+<!-- verify stdout 1
+build/plan-verify
+repair
+examples/order-status.ears.md
+-->
+```text
+spec: examples/order-status.ears.md
+proposals: 1
+
+proposal conflict R6, R7
+Drop R7.
+clears R6, R7
+before:
+The Order System shall mark the order cancelled.
+after:
+dropped
 ```
 
 `report <spec>` prints the logical problems in plain language: contradictions, uncovered situations, conditions that can never be true, requirements that add nothing, and exact duplicates. For a contradiction it asks which requirement should win and does not choose. Lint itself names a repeat that sits outside every conflict. The report still explains a stricter repeat by naming the wider requirement.

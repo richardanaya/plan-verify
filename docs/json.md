@@ -696,3 +696,64 @@ examples/order-covered.ears.md
   "proposals": []
 }
 ```
+
+## Explain
+
+`explain --json`, and `check --json --explain`, keep the `check` fields and add `explanations`. Each explanation is `id`, `line`, `sentence`, `conditions`, `actuals`, `because`, and `flip`. A condition is `text`, `held`, and `actual`. An actual is `name` and `value`. `flip` is a list of `name`, `from`, and `to`, or `null` when no input, state, or event change makes every requirement hold. A passing scenario has an empty `explanations` array.
+
+<!-- verify stdout 1
+build/plan-verify
+explain
+--json
+examples/order.ears.md
+--input
+examples/order-fail.json
+-->
+```text
+{
+  "ok": false,
+  "spec": "examples/order.ears.md",
+  "scenario": "examples/order-fail.json",
+  "violations": [
+    {
+      "id": "R1",
+      "line": 7,
+      "sentence": "WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.",
+      "because": "An order was submitted and inventory was available, but the order was not fulfilled."
+    }
+  ],
+  "explanations": [
+    {
+      "id": "R1",
+      "line": 7,
+      "sentence": "WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.",
+      "conditions": [
+        {
+          "text": "order_submitted",
+          "held": true,
+          "actual": "order_submitted=true"
+        },
+        {
+          "text": "inventory_available",
+          "held": true,
+          "actual": "inventory_available=true"
+        }
+      ],
+      "actuals": [
+        {
+          "name": "order_fulfilled",
+          "value": "false"
+        }
+      ],
+      "because": "trigger held because order_submitted=true and inventory_available=true; SHALL failed because order_fulfilled stayed false",
+      "flip": [
+        {
+          "name": "order_submitted",
+          "from": "true",
+          "to": "false"
+        }
+      ]
+    }
+  ]
+}
+```
