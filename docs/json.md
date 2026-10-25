@@ -648,3 +648,51 @@ examples/order.ears.md
   ]
 }
 ```
+
+## Repair
+
+`repair --json` is `ok`, `spec`, `wrote`, and `proposals`. `ok` is true when `proposals` is empty. `wrote` is the path `--apply` wrote, or `""` when nothing was written. Each proposal is `id`, `kind`, `before`, `after`, `cleared`, and `because`. `kind` is `conflict`, `vacuous`, or `gap`. `before` is `""` when the proposal adds a requirement. `after` is `""` when the proposal drops one. `cleared` names the finding ids the edit removes. `because` names what made a vacuous requirement unreachable, and is empty for the other kinds.
+
+<!-- verify stdout 1
+build/plan-verify
+repair
+--json
+examples/order-conflict.ears.md
+-->
+```text
+{
+  "ok": false,
+  "spec": "examples/order-conflict.ears.md",
+  "wrote": "",
+  "proposals": [
+    {
+      "id": "R2, R3",
+      "kind": "conflict",
+      "before": "When an order is submitted, the Order System shall not fulfill the order.",
+      "after": "",
+      "cleared": [
+        "R2",
+        "R3"
+      ],
+      "because": []
+    }
+  ]
+}
+```
+
+A spec with nothing to change exits 0.
+
+<!-- verify stdout 0
+build/plan-verify
+repair
+--json
+examples/order-covered.ears.md
+-->
+```text
+{
+  "ok": true,
+  "spec": "examples/order-covered.ears.md",
+  "wrote": "",
+  "proposals": []
+}
+```

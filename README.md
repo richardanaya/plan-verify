@@ -40,6 +40,7 @@ You need Node 24 and clang.
 npm install
 npm run build
 ./build/plan-verify lint examples/order-conflict.ears.md
+./build/plan-verify repair examples/order-conflict.ears.md
 ./build/plan-verify report examples/order-conflict.ears.md
 ./build/plan-verify scenarios examples/order.ears.md
 ```

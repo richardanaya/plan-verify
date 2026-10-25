@@ -1,0 +1,18 @@
+{
+  "ok": false,
+  "spec": "examples/order-conflict.ears.md",
+  "wrote": "",
+  "proposals": [
+    {
+      "id": "R2, R3",
+      "kind": "conflict",
+      "before": "When an order is submitted, the Order System shall not fulfill the order.",
+      "after": "",
+      "cleared": [
+        "R2",
+        "R3"
+      ],
+      "because": []
+    }
+  ]
+}

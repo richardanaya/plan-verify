@@ -21,10 +21,184 @@ usage:
   plan-verify diff [--json] <old-spec> <new-spec> [--out <dir>]
   plan-verify emit-smt [--json] <spec>
   plan-verify lint [--json] <spec>
+  plan-verify repair [--json] <spec> [--apply] [--out <path>]
   plan-verify report <spec>
   plan-verify scenarios [--json] <spec> [--out <dir>]
   plan-verify policy [--json] <spec> [--property <file>]
   plan-verify help
+```
+
+## Write, lint, repair, check, scenarios
+
+Write the requirements in EARS. `examples/order-conflict.ears.md` is a submitted order with two answers:
+
+```ears
+event order_submitted: Bool "The customer submits an order." phrase "an order is submitted"
+output order_fulfilled: Bool "The order is fulfilled." phrase "fulfill the order" outcome "the order was fulfilled" / "the order was not fulfilled"
+
+R1 When an order is not submitted, the Order System shall not fulfill the order.
+R2 When an order is submitted, the Order System shall fulfill the order.
+R3 When an order is submitted, the Order System shall not fulfill the order.
+```
+
+Lint names the clash. Explain it, and ask which requirement should win.
+
+<!-- verify stdout 1
+build/plan-verify
+lint
+examples/order-conflict.ears.md
+-->
+```text
+spec: examples/order-conflict.ears.md
+conflicts: 1
+gaps: 0
+misuse: 0
+wording: 0
+redundant: 0
+duplicate: 0
+vacuous: 0
+unused: 0
+uncovered: 0
+warnings: 0
+
+conflict {R2, R3}
+R2 and R3 cannot both hold.
+
+R2 line 7
+When an order is submitted, the Order System shall fulfill the order.
+
+R3 line 8
+When an order is submitted, the Order System shall not fulfill the order.
+
+They clash when an order was submitted.
+R2 requires that the order was fulfilled.
+R3 requires that the order was not fulfilled.
+
+Example scenario:
+{
+  "order_submitted": true,
+  "order_fulfilled": true
+}
+This scenario keeps R2 and breaks R3.
+
+Suggested fix: ask which requirement should win. To keep R2, remove R3. To keep R3, remove R2.
+
+Candidate repairs follow. This report does not choose one.
+
+repair drop R2
+One repair is to drop R2 and keep R3 as written.
+When an order is submitted, the Order System shall not fulfill the order.
+
+repair drop R3
+One repair is to drop R3 and keep R2 as written.
+When an order is submitted, the Order System shall fulfill the order.
+```
+
+`repair` proposes one concrete edit. It writes nothing until `--apply`. Show the proposal, and apply it when the product manager agrees.
+
+<!-- verify stdout 1
+build/plan-verify
+repair
+examples/order-conflict.ears.md
+-->
+```text
+spec: examples/order-conflict.ears.md
+proposals: 1
+
+proposal conflict R2, R3
+Drop R3.
+clears R2, R3
+before:
+When an order is submitted, the Order System shall not fulfill the order.
+after:
+dropped
+```
+
+`--apply` writes the edited spec. The command still exits 1 because it proposed a change.
+
+<!-- verify stdout 1
+build/plan-verify
+repair
+examples/order-conflict.ears.md
+--apply
+--out
+build/skill-repair.ears.md
+-->
+```text
+spec: examples/order-conflict.ears.md
+proposals: 1
+wrote: build/skill-repair.ears.md
+
+proposal conflict R2, R3
+Drop R3.
+clears R2, R3
+before:
+When an order is submitted, the Order System shall not fulfill the order.
+after:
+dropped
+```
+
+Check the written spec against a submitted order that is fulfilled.
+
+<!-- verify stdout 0
+build/plan-verify
+check
+build/skill-repair.ears.md
+--input
+test/fixtures/repair-submitted.json
+-->
+```text
+spec: build/skill-repair.ears.md
+scenario: test/fixtures/repair-submitted.json
+violations: 0
+```
+
+Scenarios lists an accepted case and a rejected case for each remaining requirement.
+
+<!-- verify stdout 0
+build/plan-verify
+scenarios
+build/skill-repair.ears.md
+-->
+```text
+spec: build/skill-repair.ears.md
+scenarios: 6
+
+R1 accepted, trigger true
+{
+  "order_submitted": false,
+  "order_fulfilled": false
+}
+An order was not submitted, and the order was not fulfilled.
+
+R1 accepted, trigger false
+{
+  "order_submitted": true,
+  "order_fulfilled": true
+}
+An order was submitted, and the order was fulfilled.
+
+R1 rejected, trigger true
+{
+  "order_submitted": false,
+  "order_fulfilled": true
+}
+An order was not submitted, but the order was fulfilled.
+
+R2 accepted, trigger true
+Same scenario as R1 accepted, trigger false.
+An order was submitted, and the order was fulfilled.
+
+R2 accepted, trigger false
+Same scenario as R1 accepted, trigger true.
+An order was not submitted, and the order was not fulfilled.
+
+R2 rejected, trigger true
+{
+  "order_submitted": true,
+  "order_fulfilled": false
+}
+An order was submitted, but the order was not fulfilled.
 ```
 
 `report <spec>` prints the logical problems in plain language: contradictions, uncovered situations, conditions that can never be true, requirements that add nothing, and exact duplicates. For a contradiction it asks which requirement should win and does not choose. Lint itself names a repeat that sits outside every conflict. The report still explains a stricter repeat by naming the wider requirement.

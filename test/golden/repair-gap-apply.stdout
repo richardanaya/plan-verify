@@ -1,0 +1,11 @@
+spec: examples/order.ears.md
+proposals: 1
+wrote: build/golden-repair-gap.ears.md
+
+proposal gap order_fulfilled
+Add R2.
+clears order_fulfilled
+before:
+none
+after:
+When an order is not submitted or inventory is not available, the Order System shall not fulfill the order.

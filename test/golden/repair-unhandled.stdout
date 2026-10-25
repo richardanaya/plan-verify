@@ -1,0 +1,10 @@
+spec: examples/order-unhandled.ears.md
+proposals: 1
+
+proposal gap order_cancelled
+Add R3.
+clears order_cancelled
+before:
+none
+after:
+When an order is cancelled and an order is submitted, the Order System shall fulfill the order.

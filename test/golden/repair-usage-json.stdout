@@ -1,0 +1,4 @@
+{
+  "ok": false,
+  "error": "usage: plan-verify repair [--json] <spec> [--apply] [--out <path>]"
+}

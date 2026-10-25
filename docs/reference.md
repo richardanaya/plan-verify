@@ -1,6 +1,6 @@
 # Reference
 
-How to build plan-verify, the EARS grammar, the solver, and the commands other than the lint catalogue. Each finding is in [lint.md](lint.md). The `--json` objects are in [json.md](json.md).
+How to build plan-verify, the EARS grammar, the solver, and the commands other than the lint catalogue. Each finding is in [lint.md](lint.md). Proposed edits are in [repair.md](repair.md). The `--json` objects are in [json.md](json.md).
 
 ## Build
 
@@ -100,6 +100,7 @@ examples/order.ears.md
 | `check [--json] <spec> --input <scenario>` | Does this scenario fit the requirements? | Implemented |
 | `diff [--json] <old-spec> <new-spec> [--out <dir>]` | How does a revised spec change what is accepted? | Implemented |
 | `lint [--json] <spec>` | Do any requirements clash, leave a hole, never trigger, leave schema unused, repeat each other, or use a word a test cannot pin down? | Implemented |
+| `repair [--json] <spec> [--apply] [--out <path>]` | What is the smallest edit for each conflict, vacuous requirement, and completeness gap? | Implemented |
 | `report <spec>` | What are the logical problems, in plain language? | Implemented |
 | `scenarios [--json] <spec> [--out <dir>]` | What accepted and rejected examples show each requirement's trigger? | Implemented |
 | `emit-smt [--json] <spec>` | What is the SMT-LIB for these requirements? | Implemented |
@@ -116,6 +117,7 @@ usage:
   plan-verify diff [--json] <old-spec> <new-spec> [--out <dir>]
   plan-verify emit-smt [--json] <spec>
   plan-verify lint [--json] <spec>
+  plan-verify repair [--json] <spec> [--apply] [--out <path>]
   plan-verify report <spec>
   plan-verify scenarios [--json] <spec> [--out <dir>]
   plan-verify policy [--json] <spec> [--property <file>]
@@ -262,6 +264,10 @@ spec: examples/order-status.ears.md
 property: examples/status-placed.ears.md
 No scenario satisfies every requirement, so none violates the property.
 ```
+
+## Repair
+
+`repair` runs the same analysis as `lint` and prints one proposed edit for each minimal conflict, each vacuous requirement, and each completeness gap. The default command writes nothing. `--apply` writes `<spec>.repaired.ears.md`, or the path given to `--out`, when the whole set lints with no hard finding. Samples, the preference order, and the exit codes are in [repair.md](repair.md).
 
 ## Diff
 

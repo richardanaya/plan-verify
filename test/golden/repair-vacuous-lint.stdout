@@ -1,0 +1,21 @@
+spec: build/golden-repair-vacuous.ears.md
+conflicts: 0
+gaps: 0
+misuse: 0
+wording: 0
+redundant: 2
+duplicate: 0
+vacuous: 0
+unused: 0
+uncovered: 0
+warnings: 0
+
+redundant R1 line 7
+R1 adds nothing. R3 implies it. Whenever the other requirements hold, R1 holds too.
+When the cart is open, the Checkout shall accept the order.
+Suggested fix: remove R1, or ask whether it was meant to say something the others do not already require. Do not delete it until the PM agrees.
+
+redundant R2 line 8
+R2 adds nothing. R3 implies it. Whenever the other requirements hold, R2 holds too.
+When the quantity is at least 5, the Checkout shall accept the order.
+Suggested fix: remove R2, or ask whether it was meant to say something the others do not already require. Do not delete it until the PM agrees.
