@@ -309,6 +309,22 @@ function runGoldenCli(): void {
     { name: "repair-usage", args: ["repair"] },
     { name: "repair-usage-json", args: ["repair", "--json"] },
     { name: "repair-out-requires-apply", args: ["repair", "examples/order-conflict.ears.md", "--out", "build/should-not-write.ears.md"] },
+    { name: "explain-one", args: ["explain", "examples/order.ears.md", "--input", "examples/order-fail.json"] },
+    { name: "explain-one-json", args: ["explain", "--json", "examples/order.ears.md", "--input", "examples/order-fail.json"] },
+    { name: "explain-many", args: ["explain", "examples/order-chain.ears.md", "--input", "test/fixtures/explain-chain-two.json"] },
+    { name: "explain-pass", args: ["explain", "examples/order.ears.md", "--input", "examples/order-pass.json"] },
+    { name: "explain-pass-json", args: ["explain", "--json", "examples/order.ears.md", "--input", "examples/order-pass.json"] },
+    { name: "explain-none", args: ["explain", "examples/order-chain.ears.md", "--input", "test/fixtures/explain-chain-stuck.json"] },
+    { name: "explain-check", args: ["check", "examples/order.ears.md", "--input", "examples/order-fail.json", "--explain"] },
+    {
+      name: "explain-out",
+      args: ["explain", "examples/order.ears.md", "--input", "examples/order-fail.json", "--out", "build/explain-golden"],
+    },
+    { name: "explain-out-check", args: ["check", "examples/order.ears.md", "--input", "build/explain-golden/R1.json"] },
+    { name: "explain-gen25", args: ["explain", "bench/specs/gen-25.ears.md", "--input", "test/fixtures/explain-gen25.json"] },
+    { name: "explain-usage", args: ["explain"] },
+    { name: "explain-usage-json", args: ["explain", "--json"] },
+    { name: "explain-out-requires", args: ["check", "examples/order.ears.md", "--input", "examples/order-fail.json", "--out", "build/should-not-explain"] },
     { name: "usage", args: [] },
     { name: "help", args: ["help"] },
   ];
@@ -328,6 +344,7 @@ function runGoldenCli(): void {
   checkDocSamples("docs-scenarios", "docs/scenarios.md", false);
   checkDocSamples("docs-diff", "docs/diff.md", false);
   checkDocSamples("docs-repair", "docs/repair.md", false);
+  checkDocSamples("docs-explain", "docs/explain.md", false);
   checkDocSamples("skill", "skills/plan-verify/SKILL.md", true);
   checkPlanToProblems();
 

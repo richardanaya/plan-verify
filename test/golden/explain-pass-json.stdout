@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "spec": "examples/order.ears.md",
+  "scenario": "examples/order-pass.json",
+  "violations": [],
+  "explanations": []
+}

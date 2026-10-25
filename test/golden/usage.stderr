@@ -1,8 +1,9 @@
 error: missing command
 usage:
-  plan-verify check [--json] <spec> --input <scenario>
+  plan-verify check [--json] <spec> --input <scenario> [--explain] [--out <dir>]
   plan-verify diff [--json] <old-spec> <new-spec> [--out <dir>]
   plan-verify emit-smt [--json] <spec>
+  plan-verify explain [--json] <spec> --input <scenario> [--out <dir>]
   plan-verify lint [--json] <spec>
   plan-verify repair [--json] <spec> [--apply] [--out <path>]
   plan-verify report <spec>

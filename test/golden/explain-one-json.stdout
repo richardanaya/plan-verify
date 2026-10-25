@@ -1,0 +1,46 @@
+{
+  "ok": false,
+  "spec": "examples/order.ears.md",
+  "scenario": "examples/order-fail.json",
+  "violations": [
+    {
+      "id": "R1",
+      "line": 7,
+      "sentence": "WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.",
+      "because": "An order was submitted and inventory was available, but the order was not fulfilled."
+    }
+  ],
+  "explanations": [
+    {
+      "id": "R1",
+      "line": 7,
+      "sentence": "WHEN an order is submitted AND inventory is available, THE Order System SHALL fulfill the order.",
+      "conditions": [
+        {
+          "text": "order_submitted",
+          "held": true,
+          "actual": "order_submitted=true"
+        },
+        {
+          "text": "inventory_available",
+          "held": true,
+          "actual": "inventory_available=true"
+        }
+      ],
+      "actuals": [
+        {
+          "name": "order_fulfilled",
+          "value": "false"
+        }
+      ],
+      "because": "trigger held because order_submitted=true and inventory_available=true; SHALL failed because order_fulfilled stayed false",
+      "flip": [
+        {
+          "name": "order_submitted",
+          "from": "true",
+          "to": "false"
+        }
+      ]
+    }
+  ]
+}

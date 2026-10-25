@@ -1,0 +1,3 @@
+spec: examples/order.ears.md
+scenario: examples/order-pass.json
+violations: 0

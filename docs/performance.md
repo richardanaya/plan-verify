@@ -85,6 +85,10 @@ The same group search speeds `lint` of `gen-100`. Three default runs were 357 ms
 
 `repair bench/specs/gen-100.ears.md` prints proposals and writes nothing. On this VM that command exited 1 with 47 proposals. Three default-binary runs were 501 ms, 480 ms, and 492 ms. Three release runs were 329 ms, 315 ms, and 318 ms. Three Node runs were 446 ms, 461 ms, and 478 ms. The slowest default run, 501 ms, is under twice the 298 ms `gen-100` lint recorded above. Node and the default binary printed the same 9816 bytes. Applying that set and running `lint` left every count at 0.
 
+## Explain
+
+`explain` evaluates the scenario the way `check` does, then tries input, state, and event values until every requirement holds. On this VM, `explain bench/specs/gen-25.ears.md --input test/fixtures/explain-gen25.json` exited 1. Three default-binary runs were 4 ms, 4 ms, and 4 ms. Three release runs were 4 ms, 3 ms, and 3 ms. Three `check` runs of the same files were 5 ms, 4 ms, and 4 ms on the default binary and 3 ms, 3 ms, and 3 ms on the release binary. Three Node explain runs were 119 ms, 117 ms, and 118 ms. Three Node check runs were 120 ms, 115 ms, and 117 ms. Explain stayed within the check time. Node and the default binary printed the same bytes.
+
 ## Next
 
 Specs that do not split into output groups search every repair against the whole core set. Checkout is one of those. On this VM that lint is 1156 ms default, 869 ms release, and 881 ms on Node.

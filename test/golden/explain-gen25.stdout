@@ -1,0 +1,14 @@
+spec: bench/specs/gen-25.ears.md
+scenario: test/fixtures/explain-gen25.json
+violations: 1
+
+R1 line 25
+While the amber desk is open, when a amber request is made, the Amber Desk shall approve the amber request.
+conditions:
+  amber_open: true
+  amber_requested: true
+shall:
+  amber_approved: false
+because: trigger held because amber_open=true and amber_requested=true; SHALL failed because amber_approved stayed false
+flip:
+  amber_requested: true -> false

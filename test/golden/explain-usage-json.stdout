@@ -1,0 +1,4 @@
+{
+  "ok": false,
+  "error": "usage: plan-verify explain [--json] <spec> --input <scenario> [--out <dir>]"
+}

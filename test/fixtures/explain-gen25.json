@@ -1,0 +1,23 @@
+{
+  "order_amount": 0,
+  "amber_requested": true,
+  "amber_open": true,
+  "amber_approved": false,
+  "amber_points": 0,
+  "birch_requested": false,
+  "birch_open": false,
+  "birch_approved": false,
+  "birch_points": 0,
+  "cedar_requested": false,
+  "cedar_open": false,
+  "cedar_approved": false,
+  "cedar_points": 0,
+  "dune_requested": false,
+  "dune_open": false,
+  "dune_approved": false,
+  "dune_points": 0,
+  "ember_requested": false,
+  "ember_open": false,
+  "ember_approved": false,
+  "ember_points": 0
+}
