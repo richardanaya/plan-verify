@@ -1,0 +1,20 @@
+spec: examples/order-vacuous.ears.md
+proposals: 2
+
+proposal vacuous R1
+Rewrite R1.
+clears R1
+Blocked by the condition contradicts itself.
+before:
+When the cart is open and the cart is not open, the Checkout shall accept the order.
+after:
+When the cart is open, the Checkout shall accept the order.
+
+proposal vacuous R2
+Rewrite R2.
+clears R2
+Blocked by the quantity is 1..5.
+before:
+When the quantity is at least 9, the Checkout shall accept the order.
+after:
+When the quantity is at least 5, the Checkout shall accept the order.

@@ -1,0 +1,12 @@
+spec: examples/order-blocked.ears.md
+proposals: 1
+
+proposal vacuous R3
+Drop R3.
+clears R3
+Blocked by R1.
+Blocked by R2.
+before:
+When the gate is open or the shift is open, the Desk shall finish the job.
+after:
+dropped

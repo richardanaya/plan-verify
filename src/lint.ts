@@ -577,7 +577,7 @@ function outputLabel(sym: SymbolDecl): string {
   return sym.name;
 }
 
-function findVacuous(spec: Spec): Vacuous[] {
+export function findVacuous(spec: Spec): Vacuous[] {
   const ubiquitous: number[] = [];
   for (let i = 0; i < spec.requirements.length; i++) {
     if (spec.requirements[i].antecedent === null) ubiquitous.push(i);

@@ -1,0 +1,10 @@
+spec: examples/order-conflict.ears.md
+proposals: 1
+
+proposal conflict R2, R3
+Drop R3.
+clears R2, R3
+before:
+When an order is submitted, the Order System shall not fulfill the order.
+after:
+dropped

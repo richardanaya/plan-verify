@@ -4,6 +4,7 @@ usage:
   plan-verify diff [--json] <old-spec> <new-spec> [--out <dir>]
   plan-verify emit-smt [--json] <spec>
   plan-verify lint [--json] <spec>
+  plan-verify repair [--json] <spec> [--apply] [--out <path>]
   plan-verify report <spec>
   plan-verify scenarios [--json] <spec> [--out <dir>]
   plan-verify policy [--json] <spec> [--property <file>]

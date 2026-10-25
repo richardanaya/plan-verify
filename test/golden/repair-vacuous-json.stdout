@@ -1,0 +1,31 @@
+{
+  "ok": false,
+  "spec": "examples/order-vacuous.ears.md",
+  "wrote": "",
+  "proposals": [
+    {
+      "id": "R1",
+      "kind": "vacuous",
+      "before": "When the cart is open and the cart is not open, the Checkout shall accept the order.",
+      "after": "When the cart is open, the Checkout shall accept the order.",
+      "cleared": [
+        "R1"
+      ],
+      "because": [
+        "the condition contradicts itself"
+      ]
+    },
+    {
+      "id": "R2",
+      "kind": "vacuous",
+      "before": "When the quantity is at least 9, the Checkout shall accept the order.",
+      "after": "When the quantity is at least 5, the Checkout shall accept the order.",
+      "cleared": [
+        "R2"
+      ],
+      "because": [
+        "the quantity is 1..5"
+      ]
+    }
+  ]
+}

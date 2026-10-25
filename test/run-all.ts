@@ -282,6 +282,33 @@ function runGoldenCli(): void {
     { name: "diff-usage-json", args: ["diff", "--json"] },
     { name: "diff-missing", args: ["diff", "examples/order-v1.ears.md", "test/fixtures/missing.ears.md"] },
     { name: "diff-malformed", args: ["diff", "test/fixtures/malformed.ears.md", "examples/order-v1.ears.md"] },
+    { name: "repair-conflict", args: ["repair", "examples/order-conflict.ears.md"] },
+    { name: "repair-conflict-json", args: ["repair", "--json", "examples/order-conflict.ears.md"] },
+    { name: "repair-vacuous", args: ["repair", "examples/order-vacuous.ears.md"] },
+    { name: "repair-vacuous-json", args: ["repair", "--json", "examples/order-vacuous.ears.md"] },
+    { name: "repair-clean", args: ["repair", "examples/order-covered.ears.md"] },
+    { name: "repair-clean-json", args: ["repair", "--json", "examples/order-covered.ears.md"] },
+    { name: "repair-blocked", args: ["repair", "examples/order-blocked.ears.md"] },
+    { name: "repair-unhandled", args: ["repair", "examples/order-unhandled.ears.md"] },
+    { name: "repair-gap", args: ["repair", "examples/order.ears.md"] },
+    {
+      name: "repair-apply",
+      args: ["repair", "examples/order-conflict.ears.md", "--apply", "--out", "build/golden-repair-conflict.ears.md"],
+    },
+    { name: "repair-apply-lint", args: ["lint", "build/golden-repair-conflict.ears.md"] },
+    {
+      name: "repair-vacuous-apply",
+      args: ["repair", "examples/order-vacuous.ears.md", "--apply", "--out", "build/golden-repair-vacuous.ears.md"],
+    },
+    { name: "repair-vacuous-lint", args: ["lint", "build/golden-repair-vacuous.ears.md"] },
+    {
+      name: "repair-gap-apply",
+      args: ["repair", "examples/order.ears.md", "--apply", "--out", "build/golden-repair-gap.ears.md"],
+    },
+    { name: "repair-gap-lint", args: ["lint", "build/golden-repair-gap.ears.md"] },
+    { name: "repair-usage", args: ["repair"] },
+    { name: "repair-usage-json", args: ["repair", "--json"] },
+    { name: "repair-out-requires-apply", args: ["repair", "examples/order-conflict.ears.md", "--out", "build/should-not-write.ears.md"] },
     { name: "usage", args: [] },
     { name: "help", args: ["help"] },
   ];
@@ -300,6 +327,7 @@ function runGoldenCli(): void {
   checkDocSamples("docs-json", "docs/json.md", false);
   checkDocSamples("docs-scenarios", "docs/scenarios.md", false);
   checkDocSamples("docs-diff", "docs/diff.md", false);
+  checkDocSamples("docs-repair", "docs/repair.md", false);
   checkDocSamples("skill", "skills/plan-verify/SKILL.md", true);
   checkPlanToProblems();
 
